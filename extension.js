@@ -1,17 +1,18 @@
 import GLib from 'gi://GLib';
 
-import St from 'gi://St'
-import Meta from 'gi://Meta'
-import Clutter from 'gi://Clutter'
-import Shell from 'gi://Shell'
-import GObject from 'gi://GObject'
+import St from 'gi://St';
+import Meta from 'gi://Meta';
+import Clutter from 'gi://Clutter';
+import GObject from 'gi://GObject';
 
-import * as Main from 'resource:///org/gnome/shell/ui/main.js'
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import { setLogging, setLogFn, journal } from './utils.js';
+
+const WindowTracker = global.get_window_tracker();
 
 const ICON_SIZE = 48;
 
@@ -24,8 +25,6 @@ class WindowListButton extends PanelMenu.Button {
     super(0.5, 'Window List Menu');
 
     journal('Button initialized');
-
-    this._windowTracker = Shell.WindowTracker.get_default();
 
     // Create icon for the panel button
     this._icon = new St.Icon({
@@ -94,7 +93,7 @@ class WindowListButton extends PanelMenu.Button {
 
     // Add each window as a menu item
     windows.forEach((metaWindow, index) => {
-      const app = this._windowTracker.get_window_app(metaWindow);
+      const app = WindowTracker.get_window_app(metaWindow);
       let icon = null;
 
       if (app) {
