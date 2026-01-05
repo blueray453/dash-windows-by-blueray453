@@ -12,7 +12,9 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import { setLogging, setLogFn, journal } from './utils.js';
 
+const Display = global.display;
 const WindowTracker = global.get_window_tracker();
+const WorkspaceManager = global.workspace_manager;
 
 const ICON_SIZE = 48;
 
@@ -30,7 +32,7 @@ class WindowListButton extends PanelMenu.Button {
     this._icon = new St.Icon({
       icon_name: 'view-list-symbolic',
       style_class: 'system-status-icon',
-      icon_size: 48,
+      icon_size: ICON_SIZE,
     });
     this.add_child(this._icon);
 
@@ -52,7 +54,7 @@ class WindowListButton extends PanelMenu.Button {
     });
 
     // Connect to workspace changes
-    this._workspaceChangedId = global.workspace_manager.connect(
+    WorkspaceManager.connect(
       'active-workspace-changed',
       () => {
         if (this.menu.isOpen) {
@@ -62,7 +64,7 @@ class WindowListButton extends PanelMenu.Button {
     );
 
     // Connect to window changes
-    this._windowAddedId = global.display.connect('window-created', () => {
+    Display.connect('window-created', () => {
       if (this.menu.isOpen) {
         this._refreshWindowList();
       }
@@ -78,8 +80,8 @@ class WindowListButton extends PanelMenu.Button {
     this.menu.removeAll();
 
     // Get windows in current workspace
-    const workspace = global.workspace_manager.get_active_workspace();
-    const windows = global.display.get_tab_list(Meta.TabList.NORMAL, workspace);
+    const workspace = WorkspaceManager.get_active_workspace();
+    const windows = Display.get_tab_list(Meta.TabList.NORMAL, workspace);
 
     journal('Found ' + windows.length + ' windows');
 
@@ -138,13 +140,13 @@ class WindowListButton extends PanelMenu.Button {
   }
 
   _onWindowActivate(metaWindow) {
-    const currentFocused = global.display.focus_window;
+    const currentFocused = Display.focus_window;
 
     // If clicking already focused window, switch to previous
     if (metaWindow === currentFocused) {
       journal('Window already focused, switching to previous');
-      const workspace = global.workspace_manager.get_active_workspace();
-      const previousWindow = global.display.get_tab_next(
+      const workspace = WorkspaceManager.get_active_workspace();
+      const previousWindow = Display.get_tab_next(
         Meta.TabList.NORMAL,
         workspace,
         metaWindow,
@@ -169,16 +171,6 @@ class WindowListButton extends PanelMenu.Button {
 
   destroy() {
     journal('Destroying button');
-
-    if (this._workspaceChangedId) {
-      global.workspace_manager.disconnect(this._workspaceChangedId);
-      this._workspaceChangedId = null;
-    }
-
-    if (this._windowAddedId) {
-      global.display.disconnect(this._windowAddedId);
-      this._windowAddedId = null;
-    }
 
     super.destroy();
   }
