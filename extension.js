@@ -21,7 +21,7 @@ class WindowListButton extends PanelMenu.Button {
   }
 
   constructor() {
-    super(0.0, 'Window List Menu');
+    super(0.5, 'Window List Menu');
 
     journal('Button initialized');
 
@@ -31,6 +31,7 @@ class WindowListButton extends PanelMenu.Button {
     this._icon = new St.Icon({
       icon_name: 'view-list-symbolic',
       style_class: 'system-status-icon',
+      icon_size: 48,
     });
     this.add_child(this._icon);
 
@@ -214,7 +215,8 @@ export default class NotificationThemeExtension extends Extension {
     journal(`Enabled`);
 
     this._indicator = new WindowListButton();
-    Main.panel.addToStatusArea('window-list-menu', this._indicator);
+    // Main.panel.addToStatusArea('window-list-menu', this._indicator);
+    Main.panel.addToStatusArea('window-list-menu', this._indicator, 0, 'left');
     journal`Indicator added to panel`;
 
   }
