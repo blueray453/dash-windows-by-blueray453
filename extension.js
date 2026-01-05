@@ -111,23 +111,19 @@ class WindowListButton extends PanelMenu.Button {
       const title = metaWindow.title || 'Unknown';
 
       const item = new PopupMenu.PopupImageMenuItem(title, icon.get_gicon());
-      item.add_style_class_name('window-list-item');
 
-      // Left click - activate window or switch to previous
-      item.connect('activate', () => {
-        journal('Window clicked: ' + title);
-        this._onWindowActivate(metaWindow);
-      });
-
-      // Right click - close window
-      item.actor.connect('button-press-event', (actor, event) => {
-        if (event.get_button() === 3) {
+      // Handle both left and right click via the activate signal
+      item.connect('activate', (menuItem, event) => {
+        if (event.get_button() === 3) {  // Right click
           journal('Right click on window: ' + title);
           metaWindow.delete(global.get_current_time());
           this.menu.close();
           return Clutter.EVENT_STOP;
+        } else {  // Left click
+          journal('Left click on window: ' + title);
+          this._onWindowActivate(metaWindow);
+          return Clutter.EVENT_STOP;
         }
-        return Clutter.EVENT_PROPAGATE;
       });
 
       // Highlight focused window
