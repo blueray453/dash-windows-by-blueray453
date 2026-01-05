@@ -13,7 +13,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import { setLogging, setLogFn, journal } from './utils.js';
 
-const ICON_SIZE = 24;
+const ICON_SIZE = 48;
 
 class WindowListButton extends PanelMenu.Button {
   static {
@@ -110,6 +110,7 @@ class WindowListButton extends PanelMenu.Button {
       const title = metaWindow.title || 'Unknown';
 
       const item = new PopupMenu.PopupImageMenuItem(title, icon.get_gicon());
+      item.add_style_class_name('window-list-item');
 
       // Left click - activate window or switch to previous
       item.connect('activate', () => {

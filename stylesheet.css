@@ -1,29 +1,12 @@
-.windows-menu-container {
-    padding: 12px;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 12px;
-    margin: 4px;
+.window-list-item {
+  font-size: 16pt !important;
+  padding: 10px 15px !important;
 }
 
-.window-menu-button {
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin: 2px 0;
+.window-list-item StIcon {
+  icon-size: 36px !important;
 }
 
-.window-menu-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.window-menu-button.focused {
-    background-color: rgba(78, 115, 223, 0.3);
-}
-
-.window-menu-button-icon {
-    margin-right: 8px;
-}
-
-.window-menu-button-text {
-    color: #ffffff;
-    font-size: 12px;
+.window-list-item StLabel {
+  font-size: 16pt !important;
 }
