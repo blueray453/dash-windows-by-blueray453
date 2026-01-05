@@ -1,0 +1,11 @@
+{
+  "uuid": "dash-windows-by-blueray453",
+  "name": "Dash Windows by blueray453",
+  "description": "GNOME Shell extension that creates new Dash.",
+  "version": 1,
+  "shell-version": [
+    "48",
+    "49"
+  ],
+  "url": "https://github.com/blueray453/dash-windows-by-blueray453"
+}
