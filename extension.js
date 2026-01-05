@@ -80,8 +80,9 @@ class WindowListButton extends PanelMenu.Button {
     this.menu.removeAll();
 
     // Get windows in current workspace
-    const workspace = WorkspaceManager.get_active_workspace();
-    const windows = Display.get_tab_list(Meta.TabList.NORMAL, workspace);
+    // const workspace = WorkspaceManager.get_active_workspace();
+    // const windows = Display.get_tab_list(Meta.TabList.NORMAL, workspace);
+    const windows = Display.get_tab_list(Meta.TabList.NORMAL, null);
 
     journal('Found ' + windows.length + ' windows');
 
@@ -123,7 +124,10 @@ class WindowListButton extends PanelMenu.Button {
           return Clutter.EVENT_STOP;
         } else {  // Left click
           journal('Left click on window: ' + title);
-          this._onWindowActivate(metaWindow);
+          journal('Activating: ' + metaWindow.title);
+          const workspace = metaWindow.get_workspace();
+          workspace.activate_with_focus(metaWindow, global.get_current_time());
+          this.menu.close();
           return Clutter.EVENT_STOP;
         }
       });
@@ -139,39 +143,8 @@ class WindowListButton extends PanelMenu.Button {
     journal('Finished adding ' + windows.length + ' windows');
   }
 
-  _onWindowActivate(metaWindow) {
-    const currentFocused = Display.focus_window;
-
-    // If clicking already focused window, switch to previous
-    if (metaWindow === currentFocused) {
-      journal('Window already focused, switching to previous');
-      const workspace = WorkspaceManager.get_active_workspace();
-      const previousWindow = Display.get_tab_next(
-        Meta.TabList.NORMAL,
-        workspace,
-        metaWindow,
-        false
-      );
-
-      if (previousWindow && previousWindow !== metaWindow) {
-        journal('Switching to: ' + previousWindow.title);
-        const previousWorkspace = previousWindow.get_workspace();
-        previousWorkspace.activate_with_focus(previousWindow, global.get_current_time());
-      } else {
-        journal('No previous window');
-      }
-    } else {
-      journal('Activating: ' + metaWindow.title);
-      const workspace = metaWindow.get_workspace();
-      workspace.activate_with_focus(metaWindow, global.get_current_time());
-    }
-
-    this.menu.close();
-  }
-
   destroy() {
     journal('Destroying button');
-
     super.destroy();
   }
 }
