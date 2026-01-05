@@ -111,6 +111,7 @@ class WindowListButton extends PanelMenu.Button {
       const title = metaWindow.title || 'Unknown';
 
       const item = new PopupMenu.PopupImageMenuItem(title, icon.get_gicon());
+      item.add_style_class_name('window-list-item');
 
       // Handle both left and right click via the activate signal
       item.connect('activate', (menuItem, event) => {
